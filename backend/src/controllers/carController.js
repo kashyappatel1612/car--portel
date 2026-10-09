@@ -1,4 +1,5 @@
 const Car = require('../models/Car');
+const Listing = require('../models/Listing');
 const calculateSmartScore = require('../utils/smartScore');
 
 // @desc    Get all cars with search, filters, sorting
@@ -114,10 +115,9 @@ exports.getCarCategories = async (req, res) => {
 };
 
 // @desc    Get single car by ID
-// @route   GET /api/cars/:id
 exports.getCarById = async (req, res) => {
   try {
-    const car = await Car.findById(req.params.id);
+    const car = await Car.findById(req.params.id).populate('seller', 'name email phone');
     if (!car) return res.status(404).json({ message: 'Car not found' });
 
     // Increment view count
@@ -127,6 +127,15 @@ exports.getCarById = async (req, res) => {
     const carObj = car.toObject();
     carObj.smartScoreInfo = calculateSmartScore(carObj);
     carObj.smartScore = carObj.smartScoreInfo.overall;
+
+    // Check if there is an associated seller listing
+    const listing = await Listing.findOne({ car: car._id });
+    if (listing) {
+      carObj.listingId = listing._id;
+      carObj.listingStatus = listing.status;
+      carObj.kmDriven = listing.kmDriven;
+      carObj.condition = listing.condition;
+    }
 
     res.json(carObj);
   } catch (error) {

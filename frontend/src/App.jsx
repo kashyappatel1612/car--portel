@@ -24,6 +24,7 @@ import RegisterPage from './components/RegisterPage';
 import UserDashboardPage from './components/UserDashboardPage';
 import WishlistPage from './components/WishlistPage';
 import MyListingsPage from './components/MyListingsPage';
+import MyOrdersPage from './components/MyOrdersPage';
 import MyEnquiriesPage from './components/MyEnquiriesPage';
 import MyReviewsPage from './components/MyReviewsPage';
 import ProfilePage from './components/ProfilePage';
@@ -94,6 +95,14 @@ function App() {
                     element={
                       <ProtectedRoute>
                         <MyListingsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/my-orders"
+                    element={
+                      <ProtectedRoute>
+                        <MyOrdersPage />
                       </ProtectedRoute>
                     }
                   />

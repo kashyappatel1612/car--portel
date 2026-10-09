@@ -17,6 +17,7 @@ import {
   MapPin,
   Send,
   X,
+  ShoppingCart,
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import API from '../services/api';
@@ -25,6 +26,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { useCompare } from '../context/CompareContext';
 import SmartScoreBadge from './SmartScoreBadge';
 import LoadingSpinner from './LoadingSpinner';
+import BuyCarModal from './BuyCarModal';
 
 const CarDetailsPage = () => {
   const { id } = useParams();
@@ -42,6 +44,7 @@ const CarDetailsPage = () => {
   const [enquiryMessage, setEnquiryMessage] = useState('');
   const [enquiryPhone, setEnquiryPhone] = useState('');
   const [enquirySent, setEnquirySent] = useState(false);
+  const [buyModalOpen, setBuyModalOpen] = useState(false);
 
   // Review Form
   const [reviewRating, setReviewRating] = useState(5);
@@ -139,7 +142,7 @@ const CarDetailsPage = () => {
             <span className="text-xs text-blue-600 font-bold block mt-0.5">EMI Starts ₹{estimatedEMI.toLocaleString()}/mo</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => toggleWishlist(car._id)}
               className={`p-2.5 rounded-xl border transition-colors ${
@@ -152,20 +155,45 @@ const CarDetailsPage = () => {
 
             <button
               onClick={() => addToCompare(car)}
-              className={`px-3.5 py-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-colors ${
+              className={`px-3 py-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-colors ${
                 inCompare ? 'bg-blue-50 text-blue-700 border-blue-300' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
               }`}
             >
               <GitCompare className="w-4 h-4" />
-              {inCompare ? 'In Compare' : 'Add to Compare'}
+              {inCompare ? 'In Compare' : 'Compare'}
             </button>
 
             <button
               onClick={() => setEnquiryModalOpen(true)}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20 transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all flex items-center gap-1.5 border border-slate-200"
             >
-              <MessageSquare className="w-4 h-4" /> Contact Seller
+              <MessageSquare className="w-4 h-4 text-slate-600" /> Inquire
             </button>
+
+            {car.listingStatus === 'sold' ? (
+              <span className="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-rose-100 text-rose-700 border border-rose-200">
+                Vehicle Sold
+              </span>
+            ) : car.listingStatus === 'reserved' ? (
+              <div className="flex items-center gap-1.5">
+                <span className="px-3 py-2 rounded-xl text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                  Reserved
+                </span>
+                <button
+                  onClick={() => setBuyModalOpen(true)}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md flex items-center gap-1.5"
+                >
+                  <ShoppingCart className="w-4 h-4" /> Book Test Drive
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setBuyModalOpen(true)}
+                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/25 transition-all flex items-center gap-1.5"
+              >
+                <ShoppingCart className="w-4 h-4" /> Buy / Reserve Now
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -492,6 +520,14 @@ const CarDetailsPage = () => {
           </div>
         </div>
       )}
+
+      {/* Buy / Booking Modal */}
+      <BuyCarModal
+        car={car}
+        isOpen={buyModalOpen}
+        onClose={() => setBuyModalOpen(false)}
+        onSuccess={() => fetchDetails()}
+      />
 
     </div>
   );

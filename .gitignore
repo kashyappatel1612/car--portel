@@ -12,6 +12,12 @@ build/
 .env
 *.log
 
+# Python Virtual Environments
+venv/
+.venv/
+env/
+__pycache__/
+
 # OS & IDE
 .DS_Store
 Thumbs.db

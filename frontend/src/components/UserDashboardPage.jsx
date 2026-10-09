@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Tag, MessageSquare, Star, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Heart, Tag, MessageSquare, Star, ArrowRight, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import API from '../services/api';
@@ -12,20 +12,23 @@ const UserDashboardPage = () => {
     myListingsCount: 0,
     myEnquiriesCount: 0,
     myReviewsCount: 0,
+    myOrdersCount: 0,
   });
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [listRes, enqRes, revRes] = await Promise.all([
+        const [listRes, enqRes, revRes, ordRes] = await Promise.all([
           API.get('/listings/my-listings'),
           API.get('/enquiries/my-enquiries'),
           API.get('/reviews/my-reviews'),
+          API.get('/orders/my-orders'),
         ]);
         setStats({
           myListingsCount: listRes.data.length || 0,
           myEnquiriesCount: (enqRes.data.sent?.length || 0) + (enqRes.data.received?.length || 0),
           myReviewsCount: revRes.data.length || 0,
+          myOrdersCount: ordRes.data.length || 0,
         });
       } catch (err) {
         console.error(err);
@@ -64,8 +67,19 @@ const UserDashboardPage = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         
+        <Link to="/my-orders" className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-2 block group hover:shadow-xl hover:border-blue-300 transition-all">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500">Orders & Bookings</span>
+            <div className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
+              <ShoppingCart className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="text-3xl font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors">{stats.myOrdersCount}</div>
+          <span className="text-[10px] text-blue-600 flex items-center gap-1 font-bold">Track Purchases <ArrowRight className="w-3 h-3" /></span>
+        </Link>
+
         <Link to="/wishlist" className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-2 block group hover:shadow-xl hover:border-blue-300 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500">Wishlist Saved</span>

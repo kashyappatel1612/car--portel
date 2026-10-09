@@ -15,6 +15,7 @@ const dealerRoutes = require('./routes/dealerRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const priceHistoryRoutes = require('./routes/priceHistoryRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use('/api/dealers', dealerRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/price-history', priceHistoryRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/orders', orderRoutes);
 
 // 404 Handler
 app.use((req, res, next) => {

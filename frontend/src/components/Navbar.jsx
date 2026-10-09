@@ -16,6 +16,7 @@ import {
   Sparkles,
   Tag,
   Store,
+  ShoppingCart,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -197,6 +198,15 @@ const Navbar = () => {
                         Admin Control Center
                       </Link>
                     )}
+
+                    <Link
+                      to="/my-orders"
+                      className="flex items-center gap-2.5 px-4 py-2 text-slate-700 hover:text-blue-600 hover:bg-blue-50"
+                      onClick={() => setProfileDropdownOpen(false)}
+                    >
+                      <ShoppingCart className="w-4 h-4 text-blue-600" />
+                      Orders & Bookings
+                    </Link>
 
                     <Link
                       to="/my-listings"

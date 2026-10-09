@@ -9,7 +9,7 @@ const listingSchema = new mongoose.Schema(
     condition: { type: String, enum: ['Excellent', 'Good', 'Fair', 'Needs Work'], default: 'Good' },
     status: {
       type: String,
-      enum: ['pending', 'approved', 'rejected', 'sold'],
+      enum: ['pending', 'approved', 'reserved', 'rejected', 'sold'],
       default: 'pending',
     },
     viewsCount: { type: Number, default: 0 },
